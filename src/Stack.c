@@ -1,71 +1,55 @@
 #include "Stack.h"
 
 uint8_t IsStackEmpty(Stack *S)
-{
-	return S->num;
+{	//Если указатель на верхний элемент не NULL, будет возврщён 1,
+	//в противном случае -- 0
+	return (S->top) ? 1 : 0;
 }
 
 Stack InitStack(void)
 {
-	Stack ret = {0, NULL};
+	Stack ret = {NULL};
 	return ret;
 }
 
 uint8_t PushInStack(Stack *S, uint8_t num)
-{
-	S->num++;//Увеличение размера стека
-	
-	//Выделение памяти под элементы, проверка
-	uint8_t *newstack = (uint8_t*)realloc(S->stack, S->num);
-	if(!newstack)
-	{	//освобождение прошлой памяти, возврат ошибки
-		free(S->stack);
+{	//Создание нового блока, проверка	
+	struct int_Stack *newEl;
+	if (!(newEl = (struct int_Stack *)malloc(sizeof(Stack))))
 		return ERR_MALLOC;
-	}
-	//Новая память записывается в стек
-	S->stack = newstack;
 
-	//Запись нового числа в вершину
-	S->stack[S->num - 1] = num;
+	//Перезапись указателя на верхний элемент
+	newEl->next = S->top;
+	newEl->num = num;
+	S->top = newEl;
+
 	return ERR_NO;
 }
 
 uint8_t ReadTopFromStack(Stack *S)
 {	//Чтение вершины
-	return S->stack[S->num - 1];
+	return S->top->num;
 }
 
-uint8_t PullFromStack(Stack *S, uint8_t *num)
-{	//Возврат числа из вершины стека
-	*num = ReadTopFromStack(S);
-	S->num--;//Уменьшение размеров стека
+void DelTopFromStack(Stack *S)
+{	//Сохранение прошлого верхнего элемента
+	struct int_Stack *prevTop = S->top;
+	//Перезапись нового верхнего элемента
+	S->top = S->top->next;
+	//Освобождение старого элемента
+	free(prevTop);
+}
 
-	//Если после уменьшения стек не обратился в 0
-	if(S->num /*!= 0*/)
-	{	//Выделение памяти под динамическую область, проверка
-		uint8_t *newstack = (uint8_t*)realloc(S->stack, S->num);
-		if(!newstack)
-		{
-			free(S->stack);
-			return ERR_MALLOC;
-		}
-		//Запись новой памяти обратно в стек
-		S->stack = newstack;
-	}
-	//Если же стек опустел
-	else 
-	{	//Динамическая область освобождается
-		free(S->stack);
-		//Записывается признак свободной памяти NULL
-		S->stack = NULL;
-	}
-	//Возврат кода отсутствия ошибок
-	return ERR_NO;
+uint8_t PullFromStack(Stack *S)
+{	//Возврат числа из вершины стека
+	uint8_t num = ReadTopFromStack(S);
+	//Удаление верхнего элемента
+	DelTopFromStack(S);
+	return num;
 }
 
 void SilentfreeStack(Stack *S)
-{	//Освобождение памяти, запись признаков
-	free(S->stack);
-	S->stack = NULL;
-	S->num = 0;
+{	//Очистка, пока не будет удалён последний элемент и top будет указывать в NULL
+	while (S->top) 
+		DelTopFromStack(S);
 }

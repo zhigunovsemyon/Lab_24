@@ -10,11 +10,16 @@ enum Errors
 	ERR_MALLOC//Ошибка malloc
 };
 
+struct int_Stack
+{
+	uint8_t num;
+	struct int_Stack *next;
+};
+
 //Стек чисел
 typedef struct
 {
-	uint8_t num;	//Число элементов стека 
-	uint8_t *stack;	//Непосредственно память стека
+	struct int_Stack *top;//Верхний элемент стека
 }
 Stack;
 
@@ -29,7 +34,10 @@ void SilentFreeStack(Stack *S);
 uint8_t IsStackEmpty(Stack *S);
 
 //Извлечение вершины стека S в num
-uint8_t PullFromStack(Stack *S, uint8_t *num);
+uint8_t PullFromStack(Stack *S);
+
+//Удаление вершины стека
+void DelTopFromStack(Stack *S);
 
 //Создание пустого стека
 Stack InitStack(void);

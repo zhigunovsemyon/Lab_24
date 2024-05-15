@@ -80,15 +80,10 @@ int main(void)
 uint8_t MultOfStack(Stack *S, uint16_t *mult)
 {
 	*mult = 1;
-	uint8_t el; // элемент, в который будет записыватся число
-
 	// Цикл перебора, пока в стеке есть число
 	while (IsStackEmpty(S))
 	{ // Осуществляется исключающее чтение
-		if (PullFromStack(S, &el))
-			return ERR_MALLOC;
-
-		*mult *= el;
+		*mult *= PullFromStack(S);
 	}
 	return ERR_NO;
 }
@@ -97,15 +92,10 @@ uint8_t MultOfStack(Stack *S, uint16_t *mult)
 uint8_t SumOfStack(Stack *S, uint16_t *sum)
 {
 	*sum = 0;
-	uint8_t el; // элемент, в который будет записыватся число
-
 	// Цикл перебора, пока в стеке есть число
 	while (IsStackEmpty(S))
 	{ // Осуществляется исключающее чтение
-		if (PullFromStack(S, &el))
-			return ERR_MALLOC;
-
-		*sum += el;
+		*sum += PullFromStack(S);
 	}
 	return ERR_NO;
 }
@@ -125,16 +115,11 @@ uint8_t CharIsNum(char c)
 // Уничтожающий вывод стека S форматом fmt
 uint8_t PrintStack(Stack *S, const char *fmt)
 {
-	uint8_t el; // элемент, в который будет записыватся число
-
 	// Цикл перебора, пока в стеке есть число
 	while (IsStackEmpty(S))
 	{ // Осуществляется исключающее чтение
-		if (PullFromStack(S, &el))
-			return ERR_MALLOC;
-
 		// Вывод каждого элемента в соответствии с форматом
-		printf(fmt, el);
+		printf(fmt, PullFromStack(S));
 	}
 	// Перенос строки в конце
 	putchar('\n');

@@ -2,12 +2,12 @@
 
 uint8_t CharToNum(char c);
 uint8_t CharIsNum(char c);
-uint8_t PrintStack(Stack *S, const char *fmt);
-uint8_t MultOfStack(Stack *S, uint16_t *mult);
-uint8_t SumOfStack(Stack *S, uint16_t *sum);
+void PrintStack(Stack *S, const char *fmt);
+void MultOfStack(Stack *S, uint16_t *mult);
+void SumOfStack(Stack *S, uint16_t *sum);
 /*
 Написать и отладить программу, реализующую работу с динамической
-структурой данных «Стек» на основе динамических массивов.
+структурой данных «Стек» на основе связных списков.
 
 Ввести некоторое число и записать его цифры в стек. Цифры из
 записи числа считывать поочередно (например, с помощью
@@ -50,23 +50,20 @@ int main(void)
 		case 'p':
 		case 'P':
 			// Вывод стека, вместе с его уничтожением, проверка malloc
-			if (PrintStack(&NumStack, "%hhu "))
-				return ERR_MALLOC;
+			PrintStack(&NumStack, "%hhu ");
 			return ERR_NO;
 
 		case 's':
 		case 'S':
 			//Подсчёт суммы членов стека, его уничтожение, проверка malloc
-			if (SumOfStack(&NumStack, &MultOrSum))
-				return ERR_MALLOC;
+			SumOfStack(&NumStack, &MultOrSum);
 			printf("Сумма чисел стека: %hu\n", MultOrSum);
 			return ERR_NO;
 
 		case 'm':
 		case 'M':
 			//Подсчёт произведения членов стека, его уничтожение, проверка malloc
-			if (MultOfStack(&NumStack, &MultOrSum))
-				return ERR_MALLOC;
+			MultOfStack(&NumStack, &MultOrSum);
 			printf("Произведение чисел стека: %hu\n", MultOrSum);
 			return ERR_NO;
 
@@ -77,7 +74,7 @@ int main(void)
 }
 
 // Посчитать произведение членов стека S в mult, очистив его
-uint8_t MultOfStack(Stack *S, uint16_t *mult)
+void MultOfStack(Stack *S, uint16_t *mult)
 {
 	*mult = 1;
 	// Цикл перебора, пока в стеке есть число
@@ -85,11 +82,10 @@ uint8_t MultOfStack(Stack *S, uint16_t *mult)
 	{ // Осуществляется исключающее чтение
 		*mult *= PullFromStack(S);
 	}
-	return ERR_NO;
 }
 
 // Посчитать сумму стека S в sum, очистив его
-uint8_t SumOfStack(Stack *S, uint16_t *sum)
+void SumOfStack(Stack *S, uint16_t *sum)
 {
 	*sum = 0;
 	// Цикл перебора, пока в стеке есть число
@@ -97,7 +93,6 @@ uint8_t SumOfStack(Stack *S, uint16_t *sum)
 	{ // Осуществляется исключающее чтение
 		*sum += PullFromStack(S);
 	}
-	return ERR_NO;
 }
 
 // Конвертирует символ, являющийся цифрой, в эту цифру
@@ -113,7 +108,7 @@ uint8_t CharIsNum(char c)
 }
 
 // Уничтожающий вывод стека S форматом fmt
-uint8_t PrintStack(Stack *S, const char *fmt)
+void PrintStack(Stack *S, const char *fmt)
 {
 	// Цикл перебора, пока в стеке есть число
 	while (IsStackEmpty(S))
@@ -123,5 +118,4 @@ uint8_t PrintStack(Stack *S, const char *fmt)
 	}
 	// Перенос строки в конце
 	putchar('\n');
-	return ERR_NO;
 }

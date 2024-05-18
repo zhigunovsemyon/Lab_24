@@ -15,7 +15,7 @@ Stack InitStack(void)
 uint8_t PushInStack(Stack *S, uint8_t num)
 {	//Создание нового блока, проверка	
 	struct int_Stack *newEl;
-	if (!(newEl = (struct int_Stack *)malloc(sizeof(Stack))))
+	if (!(newEl = (struct int_Stack *)malloc(sizeof(struct int_Stack))))
 		return ERR_MALLOC;
 
 	//Перезапись указателя на верхний элемент
